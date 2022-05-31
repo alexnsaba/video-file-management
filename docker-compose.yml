@@ -1,0 +1,32 @@
+version: "3.9"
+services:
+  video-upload-challenge:
+    container_name: video-upload-challenge
+    image: video-upload:0.0.1
+    build:
+      context: ./
+    environment:
+      - SERVER_PORT=8080
+      - DB_URL=jdbc:postgresql://postgresdb:5432/video_uploads
+      - DB_USER=user
+      - DB_PASSWORD=password
+      - MAX_LOG_ROTATION_SIZE=10MB
+    ports:
+      - "8080:8080"
+    volumes:
+      - $PWD/application-logs:/app/logs
+      - $PWD/video-uploads:/app/video-uploads
+    depends_on:
+      - video-upload-postgresdb
+  video-upload-postgresdb:
+    container_name: video-upload-postgresdb
+    image: postgres
+    ports:
+      - "5432:5432"
+    volumes:
+      - $PWD:/app/logs
+    environment:
+      - POSTGRES_USER=user
+      - POSTGRES_PASSWORD=password
+      - POSTGRES_DB=video_uploads
+      - TZ=Africa/Kampala
