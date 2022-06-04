@@ -20,12 +20,15 @@ public class ApiResponse {
 
     public static final String OPERATION_FAILURE_MESSAGE = "Operation has failed.";
     public static final String RETRIEVE_SUCCESS_MESSAGE = "File list";
-    public static final String NO_RECORD_FOUND_MESSAGE = "No videos found";
+    public static final String NO_RECORD_FOUND_MESSAGE = "No File found";
     public static final String CREATION_SUCCESS_MESSAGE = "File uploaded";
     public static final String SEARCH_PARAMETER_MESSAGE = "Search parameter is empty.";
     public static final String UPDATE_SUCCESS_MESSAGE = "Resource successfully updated.";
     public static final String DELETION_SUCCESS_MESSAGE = "File was successfully removed";
     public static final String UNSUPPORTED_MEDIA_TYPE_MESSAGE = "Unsupported Media Type.";
+    public static final String DEFAULT_IMAGE_EXTENSION = ".png";
+    public static final String DEFAULT_IMAGE_PREFIX = "-img";
+
 
 }
 

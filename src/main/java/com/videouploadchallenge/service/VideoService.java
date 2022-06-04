@@ -1,10 +1,10 @@
 package com.videouploadchallenge.service;
 
 import com.videouploadchallenge.config.ApiResponse;
-import com.videouploadchallenge.dataMapper.VideoSearchInterface;
+import com.videouploadchallenge.dataMapper.FileSearchInterface;
 import com.videouploadchallenge.entity.VideoEntity;
 import com.videouploadchallenge.exception.InvalidFileFormatException;
-import com.videouploadchallenge.exception.VideoFileNotFoundException;
+import com.videouploadchallenge.exception.FilesNotFoundException;
 import com.videouploadchallenge.repository.VideoRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,10 +20,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.nio.file.CopyOption;
-import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.LocalDateTime;
@@ -77,7 +74,7 @@ public class VideoService {
 
     public ApiResponse deleteVideoFile(long fileid) throws IOException {
         log.info("inside deleteVideoFile method of VideoService");
-        VideoEntity retrievedVideo = videoRepository.findById(fileid).orElseThrow(() -> new VideoFileNotFoundException("File not found"));
+        VideoEntity retrievedVideo = videoRepository.findById(fileid).orElseThrow(() -> new FilesNotFoundException("File not found"));
         if (Objects.nonNull(retrievedVideo)) {
             videoRepository.deleteById(fileid);
             result = new ApiResponse(ApiResponse.DELETION_SUCCESS_MESSAGE, null);
@@ -88,7 +85,7 @@ public class VideoService {
     //Download a video file
     public ResponseEntity<InputStreamSource> downloadVideoFile(long fileid) throws IOException {
         log.info("inside downloadVideoFile method of VideoService");
-        VideoEntity retrievedVideo = videoRepository.findById(fileid).orElseThrow(() -> new VideoFileNotFoundException("File not found"));
+        VideoEntity retrievedVideo = videoRepository.findById(fileid).orElseThrow(() -> new FilesNotFoundException("File not found"));
         String filename = retrievedVideo.getName();
 
         File file = new File(uploadDir+filename);
@@ -116,7 +113,7 @@ public class VideoService {
     // Video searching by name, duration and when uploaded
     public ApiResponse searchVideos(String search_key) {
         log.info("inside searchVideos method of VideoService");
-        List<VideoSearchInterface> foundVideos = videoRepository.searchVideo(search_key);
+        List<FileSearchInterface> foundVideos = videoRepository.searchVideo(search_key);
         if (!ObjectUtils.isEmpty(foundVideos)) {
             result = new ApiResponse(ApiResponse.RETRIEVE_SUCCESS_MESSAGE, foundVideos);
         } else {

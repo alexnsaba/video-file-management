@@ -2,7 +2,7 @@ package com.videouploadchallenge.controller;
 
 import com.videouploadchallenge.config.ApiResponse;
 import com.videouploadchallenge.exception.ApiException;
-import com.videouploadchallenge.service.VideoService;
+import com.videouploadchallenge.service.ImageService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -19,66 +19,55 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 
 @RestController
-@Tag(name = "Video", description = "Video Upload api")
-@RequestMapping("/v1/videos/")
+@RequestMapping("/v1/images/")
+@Tag(name = "Image", description = "Image upload api")
 @Slf4j
-public class VideoController {
+public class ImageController {
     @Autowired
-    private VideoService videoService;
+    private ImageService imageService;
 
     @PostMapping(consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
-    @Operation(summary = "upload video", description = "Upload a video file", tags = {"Video"})
+    @Operation(summary = "upload image", description = "Upload a image file", tags = {"Image"})
     @ApiResponses(value = {
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "Success Response", content = @Content(schema = @Schema(implementation = ApiResponse.class))),
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "202", description = "Failure Response", content = @Content(schema = @Schema(implementation = ApiException.class))),
     })
-    public ResponseEntity<ApiResponse> uploadVideo(@RequestParam("file") MultipartFile video) throws IOException {
-        log.info("inside uploadVideo method of VideoController");
+    public ResponseEntity<ApiResponse> uploadImage(@RequestParam("file") MultipartFile image) throws IOException {
+        log.info("inside uploadImage method of ImageController");
 
-        return ResponseEntity.status(HttpStatus.CREATED).body(videoService.uploadVideo(video));
+        return ResponseEntity.status(HttpStatus.CREATED).body(imageService.uploadImage(image));
     }
 
     @DeleteMapping("/{fileid}")
-    @Operation(summary = "Delete a video file", description = "Returns delete success message ", tags = {"Video"})
+    @Operation(summary = "Delete a image file", description = "Returns delete success message ", tags = {"Image"})
     @ApiResponses(value = {
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "successful operation", content = @Content(schema = @Schema(implementation = ApiResponse.class))),
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "404", description = "Failure operation", content = @Content(schema = @Schema(implementation = ApiException.class)))
     })
-    public ResponseEntity<ApiResponse> deleteVideoFile(@PathVariable("fileid") long fileid) throws IOException {
-        log.info("inside deleteVideoFile method of VideoController");
-        return ResponseEntity.status(HttpStatus.OK).body(videoService.deleteVideoFile(fileid));
+    public ResponseEntity<ApiResponse> deleteImageFile(@PathVariable("fileid") long fileid) throws IOException {
+        log.info("inside deleteImageFile method of ImageController");
+        return ResponseEntity.status(HttpStatus.OK).body(imageService.deleteImageFile(fileid));
     }
 
     @GetMapping("/files/{fileid}")
-    @Operation(summary = "Download a video file by fileid", description = "Download a video file by fileid", tags = {"Video"})
+    @Operation(summary = "Download a image file by fileid", description = "Download a image file by fileid", tags = {"Image"})
     @ApiResponses(value = {
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "successful operation"),
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "404", description = "Failure operation", content = @Content(schema = @Schema(implementation = ApiException.class)))
     })
-    public ResponseEntity<InputStreamSource> downloadVideoFile(@PathVariable("fileid") long fileid) throws IOException {
-        log.info("inside downloadVideoFile method of VideoController");
-        return videoService.downloadVideoFile(fileid);
+    public ResponseEntity<InputStreamSource> downloadImageFile(@PathVariable("fileid") long fileid) throws IOException {
+        log.info("inside downloadImageFile method of ImageController");
+        return imageService.downloadImageFile(fileid);
     }
 
     @GetMapping
-    @Operation(summary = "List uploaded files", description = "File list", tags = {"Video"})
+    @Operation(summary = "List uploaded files", description = "File list", tags = {"Image"})
     @ApiResponses(value = {
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "Success Response", content = @Content(schema = @Schema(implementation = ApiResponse.class))),
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "202", description = "Failure Response", content = @Content(schema = @Schema(implementation = ApiException.class))),
     })
-    public ResponseEntity<ApiResponse> listUploadedFiles() {
-        log.info("inside listUploadedFiles method of VideoController");
-        return ResponseEntity.status(HttpStatus.OK).body(this.videoService.listUploadedFiles());
-    }
-
-    @GetMapping("/search")
-    @Operation(summary = "search videos", description = "File list", tags = {"Video"})
-    @ApiResponses(value = {
-            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "Success Response", content = @Content(schema = @Schema(implementation = ApiResponse.class))),
-            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "202", description = "Failure Response", content = @Content(schema = @Schema(implementation = ApiException.class))),
-    })
-    public ResponseEntity<ApiResponse> searchVideos(@RequestParam("search_key") String search_key) {
-        log.info("inside searchVideos method of VideoController");
-        return ResponseEntity.status(HttpStatus.OK).body(this.videoService.searchVideos(search_key));
+    public ResponseEntity<ApiResponse> listUploadedImageFiles() {
+        log.info("inside listUploadedImageFiles method of ImageController");
+        return ResponseEntity.status(HttpStatus.OK).body(this.imageService.listUploadedImageFiles());
     }
 }

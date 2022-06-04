@@ -1,6 +1,6 @@
 package com.videouploadchallenge.repository;
 
-import com.videouploadchallenge.dataMapper.VideoSearchInterface;
+import com.videouploadchallenge.dataMapper.FileSearchInterface;
 import com.videouploadchallenge.entity.VideoEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
@@ -24,5 +24,5 @@ public interface VideoRepository extends JpaRepository<VideoEntity,Long> {
     void deleteById(Long id);
 
     @Query(value = "SELECT * FROM searchVideos(:search_key)",nativeQuery = true)
-    List<VideoSearchInterface> searchVideo(@Param("search_key") String search_key);
+    List<FileSearchInterface> searchVideo(@Param("search_key") String search_key);
 }

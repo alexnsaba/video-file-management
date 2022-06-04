@@ -19,15 +19,31 @@ public class VideoUploadApplication {
     }
 
     @Value("${video.upload.folder}")
-    String uploadDirectoryPath;
+    String videoUploadDirectoryPath;
+
+    @Value("${image.upload.folder}")
+    String imageUploadDirectoryPath;
 
     @PostConstruct
     public void createVideoUploadFolder() throws IOException {
-        //check if upload folder has been created
-        if (!new File(uploadDirectoryPath).exists()) {
+        //check if video upload folder has been created
+        if (!new File(videoUploadDirectoryPath).exists()) {
             log.info("creating video upload folder..............");
             try {
-                Files.createDirectories(Paths.get(uploadDirectoryPath));
+                Files.createDirectories(Paths.get(videoUploadDirectoryPath));
+            } catch (IOException ex) {
+                throw new IOException("Error " +ex.getMessage()+" has occurred");
+            }
+        }
+    }
+
+    @PostConstruct
+    public void createImageUploadFolder() throws IOException {
+        //check if image folder has been created
+        if (!new File(imageUploadDirectoryPath).exists()) {
+            log.info("creating image upload folder..............");
+            try {
+                Files.createDirectories(Paths.get(imageUploadDirectoryPath));
             } catch (IOException ex) {
                 throw new IOException("Error " +ex.getMessage()+" has occurred");
             }
