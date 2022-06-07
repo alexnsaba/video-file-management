@@ -6,7 +6,6 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
 import javax.persistence.*;
 import java.time.LocalDateTime;
 
@@ -19,24 +18,24 @@ public class ImageEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Schema(accessMode = Schema.AccessMode.READ_ONLY)
-    private long fileid;
+    private long imageId;
 
     @Column(nullable = false)
     @Schema(required = true, example = "image.png")
-    private String name;
+    private String imageName;
 
     @Column(nullable = false)
     @Schema(required = true, example = "24")
-    private int size;
+    private int imageSize;
 
     @Schema(required = true, example = "24-05-2022 00:00")
     @Column(nullable = false)
     @JsonFormat(pattern = "dd-MM-yyyy HH:mm")
-    private LocalDateTime created_at;
+    private LocalDateTime createdAt;
 
     @JsonFormat(pattern = "dd-MM-yyyy HH:mm")
     @JsonIgnore
-    private LocalDateTime deleted_at;
+    private LocalDateTime deletedAt;
 
     @Column(nullable = false)
     @JsonIgnore

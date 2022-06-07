@@ -1,7 +1,11 @@
 package com.videouploadchallenge.controller;
 
+import com.uvasoftware.scanii.models.ScaniiProcessingResult;
 import com.videouploadchallenge.config.ApiResponse;
+import com.videouploadchallenge.config.ConfigurationConstants;
+import com.videouploadchallenge.config.FileScanner;
 import com.videouploadchallenge.exception.ApiException;
+import com.videouploadchallenge.exception.CorruptFileException;
 import com.videouploadchallenge.service.ImageService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -16,7 +20,12 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+
+import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 @RestController
 @RequestMapping("/v1/images/")
@@ -35,29 +44,33 @@ public class ImageController {
     public ResponseEntity<ApiResponse> uploadImage(@RequestParam("file") MultipartFile image) throws IOException {
         log.info("inside uploadImage method of ImageController");
 
-        return ResponseEntity.status(HttpStatus.CREATED).body(imageService.uploadImage(image));
+//        if(FileScanner.scanFileForViruses(ConfigurationConstants.SCANII_API_KEY, ConfigurationConstants.SCANII_SECRET, image)){
+//            throw new CorruptFileException(ApiResponse.FILE_SCAN_MALWARE_DETECTED);
+//        }else {
+            return ResponseEntity.status(HttpStatus.CREATED).body(imageService.uploadImage(image));
+//        }
     }
 
-    @DeleteMapping("/{fileid}")
+    @DeleteMapping("/{fileId}")
     @Operation(summary = "Delete a image file", description = "Returns delete success message ", tags = {"Image"})
     @ApiResponses(value = {
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "successful operation", content = @Content(schema = @Schema(implementation = ApiResponse.class))),
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "404", description = "Failure operation", content = @Content(schema = @Schema(implementation = ApiException.class)))
     })
-    public ResponseEntity<ApiResponse> deleteImageFile(@PathVariable("fileid") long fileid) throws IOException {
+    public ResponseEntity<ApiResponse> deleteImageFile(@PathVariable("fileId") long fileId) throws IOException {
         log.info("inside deleteImageFile method of ImageController");
-        return ResponseEntity.status(HttpStatus.OK).body(imageService.deleteImageFile(fileid));
+        return ResponseEntity.status(HttpStatus.OK).body(imageService.deleteImageFile(fileId));
     }
 
-    @GetMapping("/files/{fileid}")
-    @Operation(summary = "Download a image file by fileid", description = "Download a image file by fileid", tags = {"Image"})
+    @GetMapping("/files/{fileId}")
+    @Operation(summary = "Download a image file by fileId", description = "Download a image file by fileId", tags = {"Image"})
     @ApiResponses(value = {
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "successful operation"),
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "404", description = "Failure operation", content = @Content(schema = @Schema(implementation = ApiException.class)))
     })
-    public ResponseEntity<InputStreamSource> downloadImageFile(@PathVariable("fileid") long fileid) throws IOException {
+    public ResponseEntity<InputStreamSource> downloadImageFile(@PathVariable("fileId") long fileId) throws IOException {
         log.info("inside downloadImageFile method of ImageController");
-        return imageService.downloadImageFile(fileid);
+        return imageService.downloadImageFile(fileId);
     }
 
     @GetMapping

@@ -38,26 +38,26 @@ public class VideoController {
         return ResponseEntity.status(HttpStatus.CREATED).body(videoService.uploadVideo(video));
     }
 
-    @DeleteMapping("/{fileid}")
+    @DeleteMapping("/{fileId}")
     @Operation(summary = "Delete a video file", description = "Returns delete success message ", tags = {"Video"})
     @ApiResponses(value = {
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "successful operation", content = @Content(schema = @Schema(implementation = ApiResponse.class))),
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "404", description = "Failure operation", content = @Content(schema = @Schema(implementation = ApiException.class)))
     })
-    public ResponseEntity<ApiResponse> deleteVideoFile(@PathVariable("fileid") long fileid) throws IOException {
+    public ResponseEntity<ApiResponse> deleteVideoFile(@PathVariable("fileId") long fileId) throws IOException {
         log.info("inside deleteVideoFile method of VideoController");
-        return ResponseEntity.status(HttpStatus.OK).body(videoService.deleteVideoFile(fileid));
+        return ResponseEntity.status(HttpStatus.OK).body(videoService.deleteVideoFile(fileId));
     }
 
-    @GetMapping("/files/{fileid}")
-    @Operation(summary = "Download a video file by fileid", description = "Download a video file by fileid", tags = {"Video"})
+    @GetMapping("/files/{fileId}")
+    @Operation(summary = "Download a video file by fileId", description = "Download a video file by fileId", tags = {"Video"})
     @ApiResponses(value = {
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "successful operation"),
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "404", description = "Failure operation", content = @Content(schema = @Schema(implementation = ApiException.class)))
     })
-    public ResponseEntity<InputStreamSource> downloadVideoFile(@PathVariable("fileid") long fileid) throws IOException {
+    public ResponseEntity<InputStreamSource> downloadVideoFile(@PathVariable("fileId") long fileId) throws IOException {
         log.info("inside downloadVideoFile method of VideoController");
-        return videoService.downloadVideoFile(fileid);
+        return videoService.downloadVideoFile(fileId);
     }
 
     @GetMapping

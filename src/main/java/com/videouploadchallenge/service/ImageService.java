@@ -1,8 +1,11 @@
 package com.videouploadchallenge.service;
 
 import com.videouploadchallenge.config.ApiResponse;
+import com.videouploadchallenge.config.ConfigurationConstants;
+import com.videouploadchallenge.config.FileScanner;
 import com.videouploadchallenge.config.ImageResizer;
 import com.videouploadchallenge.entity.ImageEntity;
+import com.videouploadchallenge.exception.CorruptFileException;
 import com.videouploadchallenge.exception.FilesNotFoundException;
 import com.videouploadchallenge.exception.InvalidFileFormatException;
 import com.videouploadchallenge.repository.ImageRepository;
@@ -30,6 +33,9 @@ public class ImageService {
     @Autowired
     private ImageRepository imageRepository;
 
+    @Autowired
+    FileScanner fileScanner;
+
     private ApiResponse result;
 
     @Value("${image.upload.folder}")
@@ -44,21 +50,19 @@ public class ImageService {
     // Upload a image file
     public ApiResponse uploadImage(MultipartFile image) throws IOException {
         log.info("inside uploadImage method of ImageService");
-        ImageEntity imageEntity = new ImageEntity();
         ImageEntity savedImageEntity = null;
 
-        String imageName = System.currentTimeMillis() + ApiResponse.DEFAULT_IMAGE_PREFIX;
+        String imageName = System.currentTimeMillis() + ApiResponse.DEFAULT_IMAGE_PREFIX + ApiResponse.DEFAULT_IMAGE_EXTENSION;
 
         if (image.getContentType().contains("image/") && image.getSize() > 0) {
 
-            imageEntity.setName(imageName);
-            imageEntity.setSize((int) image.getSize());
-            imageEntity.setCreated_at(LocalDateTime.now());
 
             //compress image
-            ImageResizer.transferResizedImage(image,resizedImageWidth,resizedImageHeight,imageName,uploadDir);
+            //ImageResizer.transferResizedImage(image,resizedImageWidth,resizedImageHeight,imageName,uploadDir);
 
-            savedImageEntity = imageRepository.save(imageEntity);
+           ImageEntity scannedImage = fileScanner.scanFileForVirusesAndSave(ConfigurationConstants.SCANII_API_KEY, ConfigurationConstants.SCANII_SECRET, image);
+
+            savedImageEntity = imageRepository.save(scannedImage);
 
         } else {
             throw new InvalidFileFormatException("Invalid Image Format");
@@ -74,21 +78,21 @@ public class ImageService {
 
     //Delete a image file
 
-    public ApiResponse deleteImageFile(long fileid) throws IOException {
+    public ApiResponse deleteImageFile(long fileId) throws IOException {
         log.info("inside deleteImageFile method of ImageService");
-        ImageEntity retrievedImage = imageRepository.findById(fileid).orElseThrow(() -> new FilesNotFoundException("File not found"));
+        ImageEntity retrievedImage = imageRepository.findById(fileId).orElseThrow(() -> new FilesNotFoundException("File not found"));
         if (Objects.nonNull(retrievedImage)) {
-            imageRepository.deleteById(fileid);
+            imageRepository.deleteById(fileId);
             result = new ApiResponse(ApiResponse.DELETION_SUCCESS_MESSAGE, null);
         }
         return result;
     }
 
     //Download a image file
-    public ResponseEntity<InputStreamSource> downloadImageFile(long fileid) throws IOException {
+    public ResponseEntity<InputStreamSource> downloadImageFile(long fileId) throws IOException {
         log.info("inside downloadImageFile method of ImageService");
-        ImageEntity retrievedImage = imageRepository.findById(fileid).orElseThrow(() -> new FilesNotFoundException("File not found"));
-        String filename = retrievedImage.getName();
+        ImageEntity retrievedImage = imageRepository.findById(fileId).orElseThrow(() -> new FilesNotFoundException("File not found"));
+        String filename = retrievedImage.getImageName();
 
         File file = new File(uploadDir+filename);
 

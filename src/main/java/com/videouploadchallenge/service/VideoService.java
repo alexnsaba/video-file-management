@@ -52,9 +52,9 @@ public class VideoService {
             Path path = Paths.get(uploadDir + name);
             video.transferTo(path);
 
-            videoEntity.setName(name);
-            videoEntity.setSize((int) video.getSize());
-            videoEntity.setCreated_at(LocalDateTime.now());
+            videoEntity.setVideoName(name);
+            videoEntity.setVideoSize((int) video.getSize());
+            videoEntity.setCreatedAt(LocalDateTime.now());
 
             savedVideoEntity = videoRepository.save(videoEntity);
 
@@ -72,21 +72,21 @@ public class VideoService {
 
     //Delete a video file
 
-    public ApiResponse deleteVideoFile(long fileid) throws IOException {
+    public ApiResponse deleteVideoFile(long fileId) throws IOException {
         log.info("inside deleteVideoFile method of VideoService");
-        VideoEntity retrievedVideo = videoRepository.findById(fileid).orElseThrow(() -> new FilesNotFoundException("File not found"));
+        VideoEntity retrievedVideo = videoRepository.findById(fileId).orElseThrow(() -> new FilesNotFoundException("File not found"));
         if (Objects.nonNull(retrievedVideo)) {
-            videoRepository.deleteById(fileid);
+            videoRepository.deleteById(fileId);
             result = new ApiResponse(ApiResponse.DELETION_SUCCESS_MESSAGE, null);
         }
         return result;
     }
 
     //Download a video file
-    public ResponseEntity<InputStreamSource> downloadVideoFile(long fileid) throws IOException {
+    public ResponseEntity<InputStreamSource> downloadVideoFile(long fileId) throws IOException {
         log.info("inside downloadVideoFile method of VideoService");
-        VideoEntity retrievedVideo = videoRepository.findById(fileid).orElseThrow(() -> new FilesNotFoundException("File not found"));
-        String filename = retrievedVideo.getName();
+        VideoEntity retrievedVideo = videoRepository.findById(fileId).orElseThrow(() -> new FilesNotFoundException("File not found"));
+        String filename = retrievedVideo.getVideoName();
 
         File file = new File(uploadDir+filename);
 

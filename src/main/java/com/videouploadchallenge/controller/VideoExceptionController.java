@@ -1,7 +1,9 @@
 package com.videouploadchallenge.controller;
 
 import com.videouploadchallenge.config.ApiResponse;
+import com.videouploadchallenge.config.ConfigurationConstants;
 import com.videouploadchallenge.exception.ApiException;
+import com.videouploadchallenge.exception.CorruptFileException;
 import com.videouploadchallenge.exception.InvalidFileFormatException;
 import com.videouploadchallenge.exception.FilesNotFoundException;
 import org.springframework.http.HttpStatus;
@@ -28,4 +30,11 @@ public class VideoExceptionController {
         ApiException apiException = new ApiException(exception.getMessage());
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(apiException);
     }
+
+    @ExceptionHandler(CorruptFileException.class)
+    public ResponseEntity<ApiException> handleCorruptFileException(CorruptFileException exception){
+        ApiException apiException = new ApiException(exception.getMessage());
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(apiException);
+    }
+
 }

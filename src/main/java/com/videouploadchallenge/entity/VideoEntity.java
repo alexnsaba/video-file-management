@@ -18,24 +18,24 @@ public class VideoEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Schema(accessMode = Schema.AccessMode.READ_ONLY)
-    private long fileid;
+    private long videoId;
 
     @Column(nullable = false)
     @Schema(required = true, example = "Video.mp4")
-    private String name;
+    private String videoName;
 
     @Column(nullable = false)
     @Schema(required = true, example = "24")
-    private int size;
+    private int videoSize;
 
     @Schema(required = true, example = "24-05-2022 00:00")
     @Column(nullable = false)
     @JsonFormat(pattern = "dd-MM-yyyy HH:mm")
-    private LocalDateTime created_at;
+    private LocalDateTime createdAt;
 
     @JsonFormat(pattern = "dd-MM-yyyy HH:mm")
     @JsonIgnore
-    private LocalDateTime deleted_at;
+    private LocalDateTime deletedAt;
 
     @Column(nullable = false)
     @JsonIgnore

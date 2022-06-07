@@ -11,14 +11,14 @@ import java.util.Optional;
 
 public interface ImageRepository extends JpaRepository<ImageEntity,Long> {
 
-    @Query(value = "SELECT * FROM images i WHERE i.deleted is false AND i.fileid = :id",nativeQuery = true)
-    Optional<ImageEntity> findById(Long id);
+    @Query(value = "SELECT * FROM images i WHERE i.deleted IS FALSE AND i.image_id = :imageId",nativeQuery = true)
+    Optional<ImageEntity> findById(long imageId);
 
-    @Query(value = "SELECT * FROM images i WHERE i.deleted is false",nativeQuery = true)
+    @Query(value = "SELECT * FROM images i WHERE i.deleted IS FALSE",nativeQuery = true)
     List<ImageEntity> findAll();
 
     @Transactional
     @Modifying
-    @Query(value = "update images set deleted = true, deleted_at=now() where fileid = :id",nativeQuery = true)
-    void deleteById(Long id);
+    @Query(value = "UPDATE images SET deleted IS TRUE, deleted_at = NOW() WHERE image_id = :imageId",nativeQuery = true)
+    void deleteById(long imageId);
 }

@@ -28,6 +28,7 @@ public class ApiResponse {
     public static final String UNSUPPORTED_MEDIA_TYPE_MESSAGE = "Unsupported Media Type.";
     public static final String DEFAULT_IMAGE_EXTENSION = ".png";
     public static final String DEFAULT_IMAGE_PREFIX = "-img";
+    public static final String FILE_SCAN_MALWARE_DETECTED = "Corrupted file detected";
 
 
 }
